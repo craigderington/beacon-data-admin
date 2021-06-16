@@ -17,6 +17,9 @@ app.config["FLASK_ADMIN_SWATCH"] = "flatly"
 # alchemy
 db = SQLAlchemy(app)
 
+# create the Admin and the Views
+admin = Admin(app, name="🦉 RMS", template_mode="bootstrap4")
+
 # Model Class Definitions
 class Dealer(db.Model):
     __tablename__ = "dealer"
@@ -256,21 +259,19 @@ def get_search_results():
 def login():
     pass
 
+# create the model views for our classes
+admin.add_view(ModelView(Dealer, db.session, endpoint="dealer"))
+admin.add_view(ModelView(Customer, db.session, endpoint="customer"))
+admin.add_view(ModelView(Location, db.session, endpoint="location"))
+admin.add_view(ModelView(Tank, db.session, endpoint="tank"))
+admin.add_view(ModelView(RadioType, db.session, endpoint="radiotype"))
+admin.add_view(ModelView(Radio, db.session, endpoint="radio"))
+admin.add_view(ModelView(RadioSensor, db.session, endpoint="radiosensor"))
+admin.add_view(ModelView(RadioSensorData, db.session, endpoint="radiosensordata"))
+admin.add_view(ModelView(SensorType, db.session, endpoint="sensortype"))
+# admin.add_view(ModelView(User, db.session))
 
 if __name__ == "__main__":
-    # Create Admin Views
-    admin = Admin(app, name="🦉 RMS", template_mode="bootstrap4")
-    admin.add_view(ModelView(Dealer, db.session, endpoint="dealer"))
-    admin.add_view(ModelView(Customer, db.session, endpoint="customer"))
-    admin.add_view(ModelView(Location, db.session, endpoint="location"))
-    admin.add_view(ModelView(Tank, db.session, endpoint="tank"))
-    admin.add_view(ModelView(RadioType, db.session, endpoint="radiotype"))
-    admin.add_view(ModelView(Radio, db.session, endpoint="radio"))
-    admin.add_view(ModelView(RadioSensor, db.session, endpoint="radiosensor"))
-    admin.add_view(ModelView(RadioSensorData, db.session, endpoint="radiosensordata"))
-    admin.add_view(ModelView(SensorType, db.session, endpoint="sensortype"))
-    # admin.add_view(ModelView(User, db.session))
-
     # start the app
     app.run(
         host=config.HOST,
