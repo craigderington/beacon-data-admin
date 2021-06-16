@@ -48,6 +48,10 @@ The default bootstrap4 navbar's default behavior is padding-right and padding-le
 ```
 $ nano venv/lib/flask_admin/templates/bootstrap4/base.html
 ```
+If the above location is not found, try 
+```
+$ nano venv/lib/python3.8/site-packages/flask_admin/templates/bootstrap4/admin/base.html
+```
 
 Line 40: 
 Add p-0 (0px) padding to container-fluid
