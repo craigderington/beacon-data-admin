@@ -43,7 +43,7 @@ class Dealer(db.Model):
 class DealerSettings(db.Model):
     __tablename__ = "dealersettings"
     id = db.Column(db.Integer, primary_key=True)
-    dealer_id = db.Column(db.Integer, ForeignKey("dealer.id"), nullable=False)
+    dealer_id = db.Column(db.Integer, db.ForeignKey("dealer.id"), nullable=False)
     dealer_config = db.Column(db.String(1024), nullable=True) # stored as json
 
     def as_dict(self):
@@ -132,7 +132,7 @@ class SensorType(db.Model):
 class Radio(db.Model):
     __tablename__ = "radio"
     id = db.Column(db.Integer, primary_key=True)
-    dealer_id = db.Column(db.Integer, ForeignKey("dealer.id"), nullable=False)
+    dealer_id = db.Column(db.Integer, db.ForeignKey("dealer.id"), nullable=False)
     dealer = relationship("Dealer")
     radio_imei = db.Column(db.String(255), nullable=False)
     radio_mtu_id = db.Column(db.String(255), nullable=False)
@@ -174,6 +174,8 @@ class RadioSensor(db.Model):
     sensor_params = db.Column(db.String(255), nullable=False)
     sensor_flow = db.Column(db.String(255), nullable=False)
     sensor_calculate = db.Column(db.String(255), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"), nullable=True)
+    customer = relationship("Customer")
 
     def __repr__(self):
         if self.id and self.sensor_name and self.sensor_type:
@@ -196,6 +198,11 @@ class RadioSensor(db.Model):
     def get_sensor_latlong(self):
         if self.sensor_latitude and self.sensor_longitude:
             return "{}/{}".format(self.sensor_latitude, self.sensor_longitude)
+    
+    def get_sensor_customer(self):
+        if self.customer_id:
+            return "{}".format(self.customer)
+        return "{}".format(str(self.customer_id))
 
 
 class RadioSensorData(db.Model):
