@@ -1,0 +1,37 @@
+{% extends "_layout.html" %}
+
+
+
+{% block content %}
+    <h1>Flask Auto-Complete using JQuery &amp; SQLAlchemy</h1>
+    <form class="form-inline">
+        <div class="form-group">
+            {{ form.name(class="form-control") }}
+        </div>
+        <button type="submit" name="submit" class="btn btn-primary btn-md">
+            <i class="fa fa-save"></i> Submit
+        </button>
+
+    </form>
+{% endblock %}
+
+
+{% block jsextra %}
+<script>
+    $(document).ready(function() {
+        var names = [];
+        function loadNames() {
+            $.getJSON('/search', function(data, status, xhr) {
+                for (var i = 0; i < data.length; i++) {
+                    names.push(data[i].name);
+                }
+            });
+        };
+        loadNames();
+
+        $("#name").autocomplete({
+            source: names,
+        });
+    });
+</script>
+{% endblock %}
