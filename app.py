@@ -51,8 +51,8 @@ class Receiver(db.Model):
     receiver_name = db.Column(db.String(255), nullable=False, unique=True)
     receiver_fqdn = db.Column(db.String(255), nullable=False)
     receiver_ip = db.Column(db.String(255), nullable=False)
-    receiver_status = db.column(db.String(255), nullable=False)
-    receiver_port = db.Column(db.Smallint, nullable=False)
+    receiver_status = db.Column(db.String(255), nullable=False)
+    receiver_port = db.Column(db.Integer, nullable=False)
     
     def __repr__(self):
         if self.id and self.receiver_name and self.receiver_status:
