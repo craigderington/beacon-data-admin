@@ -1,6 +1,8 @@
 # Beacon 
 A SQLAlchemy Flask Admin UI for the Beacon Data Model
 
+![Beacon Screenshot](https://aws-beacon-s3.s3.us-west-2.amazonaws.com/inspinia/img/beacon_screenshot.png)
+
 A Flask Admin ModelView Admin for:
 
 * Dealer
