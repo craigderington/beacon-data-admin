@@ -43,6 +43,33 @@ class Dealer(db.Model):
         return False
 
 
+class Receiver(db.Model):
+    __tablename__ = "receiver"
+    id = db.Column(db.Integer, primary_key=True)
+    receiver_type_id = db.Column(db.Integer, db.ForeignKey("receivertype.id"), nullable=False)
+    receiver = relationship("ReceiverType")
+    receiver_name = db.Column(db.String(255), nullable=False, unique=True)
+    receiver_fqdn = db.Column(db.String(255), nullable=False)
+    receiver_ip = db.Column(db.String(255), nullable=False)
+    receiver_status = db.column(db.Tinyint, nullable=False)
+    receiver_port = db.Column(db.Smallint, nullable=False)
+    
+    def __repr__(self):
+        if self.id and self.receiver_name and self.receiver_status:
+            return "name: {} status: {}".format(self.receiver_name, self.receiver_status)
+
+
+class ReceiverType(db.Model):
+    __tablename__ = "receivertype"
+    id = db.Column(db.Integer, primary_key=True)
+    receiver_type_name = db.Column(db.String(255), nullable=False)
+    receiver_version = db.Column(db.Tinyint(), nullable=False)
+    
+    def __repr__(self):
+        if self.id and self.receiver_type_name and self.receiver_version:
+            return "name: {} version: {}".format(self.receiver_type_name, self.receiver_version)
+
+
 class DealerSettings(db.Model):
     __tablename__ = "dealersettings"
     id = db.Column(db.Integer, primary_key=True)
