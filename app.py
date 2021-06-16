@@ -51,7 +51,7 @@ class Receiver(db.Model):
     receiver_name = db.Column(db.String(255), nullable=False, unique=True)
     receiver_fqdn = db.Column(db.String(255), nullable=False)
     receiver_ip = db.Column(db.String(255), nullable=False)
-    receiver_status = db.column(db.Tinyint, nullable=False)
+    receiver_status = db.column(db.String(255), nullable=False)
     receiver_port = db.Column(db.Smallint, nullable=False)
     
     def __repr__(self):
@@ -63,7 +63,7 @@ class ReceiverType(db.Model):
     __tablename__ = "receivertype"
     id = db.Column(db.Integer, primary_key=True)
     receiver_type_name = db.Column(db.String(255), nullable=False)
-    receiver_version = db.Column(db.Tinyint(), nullable=False)
+    receiver_version = db.Column(db.String(255), nullable=False)
     
     def __repr__(self):
         if self.id and self.receiver_type_name and self.receiver_version:
