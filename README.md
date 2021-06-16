@@ -46,11 +46,7 @@ Instance: ~/projects/beacon-data-admin/instance
 The default bootstrap4 navbar's default behavior is padding-right and padding-left of 15px.  I prefer to have a fluid-container and no padding on my bootstrap navbar.
 
 ```
-$ nano venv/lib/flask_admin/templates/bootstrap4/base.html
-```
-If the above location is not found, try 
-```
-$ nano venv/lib/python3.8/site-packages/flask_admin/templates/bootstrap4/admin/base.html
+$ nano venv/lib/python3<version>/site-packages/flask_admin/templates/bootstrap4/admin/base.html
 ```
 
 Line 40: 
