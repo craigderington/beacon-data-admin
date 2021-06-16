@@ -29,18 +29,36 @@ $ . venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
+# Create Database
+
+```
+$ flask shell
+Python 3.9.5 (default, May  4 2021, 03:36:27) 
+[Clang 12.0.0 (clang-1200.0.32.29)] on darwin
+App: app [production]
+Instance: ~/projects/beacon-data-admin/instance
+>>> from app import db
+>>> db.create_all()
+```
+
 ### Edit Environment Template
+
+The default bootstrap4 navbar's default behavior is padding-right and padding-left of 15px.  I prefer to have a fluid-container and no padding on my bootstrap navbar.
 
 ```
 $ nano venv/lib/flask_admin/templates/bootstrap4/base.html
 ```
 
-Line 40: Add 0px padding to container-fluid
+Line 40: 
+Add p-0 (0px) padding to container-fluid
+
 ```
 <div class="container-fluid p-0">
 ```
 
-Line 75: Add 50px; padding to block body
+Line 75: 
+Add a div container with class 'container-fluid' and wrap bloc body container.  
+Add p-50 (50px) of full padding
 ```
 <div class="container-fluid p-50">
     {% block body %}{% endblock %}
