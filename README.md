@@ -9,6 +9,8 @@ A Flask Admin ModelView Admin for:
 * Customer
 * Location
 * TankOrMeter
+* ReceiverType
+* Receiver
 * Radio
 * RadioSensor
 * RadioSensorData
@@ -29,7 +31,7 @@ $ . venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
-# Create Database
+### Create Database
 
 ```
 $ flask shell
@@ -77,15 +79,26 @@ $ gunicorn -b 0.0.0.0:8580 -w 2 app:app
 
 ### Load the Admin in Browser
 
+```
+http://your-ip-address:8580/admin
+```
+
+Additionally, there is a default page at the site index in which the form is being developed for auto-complete using jQuery.
+
+```
+http://your-ip-address:8580/index
+```
 
 ### TODOS
 
-* User Token Authentication
+* User Token Authentication (Flask Login/Security)
+* Application Factory Pattern
 * Forms &amp; Search Feature
-* Blueprints
-* App Factory Pattern
+* Flask Blueprints
+* Alembic (database migrations)
 * Celery Integration
-* Data Mining/Machine Learning
+* Data Mining/Machine Learning (pyTorch &amp; scikit)
+
 
 
 

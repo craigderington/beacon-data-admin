@@ -234,6 +234,7 @@ class RadioSensorData(db.Model):
 
 # Routes
 @app.route("/", methods=["GET", "POST"])
+@app.route("/index", methods=["GET", "POST"])
 def index():
     """
     Search using auto complete from database
@@ -250,9 +251,9 @@ def index():
 
 @app.route("/search", methods=["GET", "POST"])
 def get_search_results():
-    resp = Radio.query.all()
-    radios = [r.as_dict() for r in resp]
-    return jsonify(radios)
+    resp = Dealer.query.all()
+    dealers = [d.as_dict() for d in resp]
+    return jsonify(dealers)
 
 
 @app.route("/login", methods=["GET"])
