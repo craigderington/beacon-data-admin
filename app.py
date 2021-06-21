@@ -57,6 +57,7 @@ class Receiver(db.Model):
     def __repr__(self):
         if self.id and self.receiver_name and self.receiver_status:
             return "name: {} status: {}".format(self.receiver_name, self.receiver_status)
+        return "no name/status, ID: {}".format(str(self.id))
 
 
 class ReceiverType(db.Model):
@@ -68,6 +69,7 @@ class ReceiverType(db.Model):
     def __repr__(self):
         if self.id and self.receiver_type_name and self.receiver_version:
             return "name: {} version: {}".format(self.receiver_type_name, self.receiver_version)
+        return "no name/version, ID: {}".format(str(self.id))
 
 
 class DealerSettings(db.Model):
@@ -148,7 +150,7 @@ class RadioType(db.Model):
 class SensorType(db.Model):
     __tablename__ = "sensortype"
     id = db.Column(db.Integer, primary_key=True)
-    sensor_type_name = db.Column(db.String(255), nullable=False)
+    sensor_type_name = db.Column(db.String(255), nullable=False, unique=True)
     sensor_type_description = db.Column(db.String(255), nullable=False)
     sensor_type_code = db.Column(db.String(255), nullable=False)
     sensor_manufacturer = db.Column(db.String(255), nullable=False)
@@ -305,3 +307,5 @@ if __name__ == "__main__":
         port=config.PORT,
         debug=config.DEBUG
     )
+
+    #need users, roles(admin users, customers, etc)
