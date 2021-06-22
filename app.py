@@ -1,10 +1,50 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, session, redirect, flash
+import flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_admin import Admin
-from forms import SearchForm
-import config
+from sqlalchemy.sql.functions import now
+
 from flask_admin.contrib.sqla import ModelView
+import flask_login
+from werkzeug import security
+import wtforms
+
+#from .constants import USER, USER_ROLE, ADMIN, INACTIVE, USER_STATUS
+# User role
+ADMIN = 0
+STAFF = 1
+USER = 2
+USER_ROLE = {
+    ADMIN: 'admin',
+    STAFF: 'staff',
+    USER: 'user',
+}
+
+# User status
+INACTIVE = 0
+NEW = 1
+ACTIVE = 2
+USER_STATUS = {
+    INACTIVE: 'inactive',
+    NEW: 'new',
+    ACTIVE: 'active',
+}
+
+
+# Account Type
+BASIC = 0
+PRO = 1
+PREMIUM = 2
+ACCOUNT_TYPE = {
+    BASIC: 'basic',
+    PRO: 'pro',
+    PREMIUM: 'premium'
+}
+
+
+#from flask_login import current_user
+#from flask_admin.contrib import sqla
 
 
 # create application
@@ -13,6 +53,9 @@ app.config["SECRET_KEY"] = config.SECRET_KEY
 app.config["SQLALCHEMY_DATABASE_URI"] = config.SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = config.SQLALCHEMY_TRACK_MODIFICATIONS
 app.config["FLASK_ADMIN_SWATCH"] = "flatly"
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+import config 
 
 # alchemy
 db = SQLAlchemy(app)
@@ -281,6 +324,87 @@ class RadioSensorData(db.Model):
 
 # End Data Model Class Objects
 
+class Users(db.Model, flask_login.UserMixin):
+
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(255))
+
+    email = db.Column(db.String(255), unique=True)
+    email_activation_key = db.Column(db.String(255))
+
+    created_time = db.Column(db.DateTime, default=now)
+
+    _password = db.Column('password', db.String(100), nullable=False)
+
+    def _get_password(self):
+        return self._password
+
+    def _set_password(self, password):
+        self._password = security.generate_password_hash(password)
+
+    # Hide password encryption by exposing password field only.
+    password = db.synonym('_password',
+                          descriptor=property(_get_password,
+                                              _set_password))
+
+    def check_password(self, password):
+        if self.password is None:
+            return False
+        return security.check_password_hash(self.password, password)
+
+    role_code = db.Column(db.SmallInteger, default=USER, nullable=False)
+
+    @property
+    def role(self):
+        return USER_ROLE[self.role_code]
+
+    def is_admin(self):
+        return self.role_code == ADMIN
+
+    def is_authenticated(self):
+        return True
+
+    # One-to-many relationship between users and user_statuses.
+    status_code = db.Column(db.SmallInteger, default=INACTIVE)
+
+    @property
+    def status(self):
+        return USER_STATUS[self.status_code]
+
+    # Class methods
+
+    @classmethod
+    def authenticate(cls, login, password):
+        user = cls.query.filter_by(email=login).first()
+
+        if user:
+            authenticated = user.check_password(password)
+        else:
+            authenticated = False
+
+        return user, authenticated
+
+    @classmethod
+    def get_by_id(cls, user_id):
+        return cls.query.filter_by(id=user_id).first_or_404()
+
+    def check_email(self, email):
+        return Users.query.filter(Users.email == email).count() == 0
+
+    def __unicode__(self):
+        _str = '%s. %s' % (self.id, self.name)
+        return str(_str)
+
+
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.get(user_id) #User or Users?
+
 
 # Routes
 @app.route("/", methods=["GET", "POST"])
@@ -307,7 +431,25 @@ def get_search_results():
 
 @app.route("/login", methods=["GET"])
 def login():
-    pass
+    # Here we use a class of some kind to represent and validate our
+    # client-side form data. For example, WTForms is a library that will
+    # handle this for us, and we use a custom LoginForm to validate.
+    form = wtforms.LoginForm()
+    if form.validate_on_submit():
+        # Login and validate the user.
+        # user should be an instance of your `User` class
+        flask_login.login_user(user)
+
+        flash('Logged in successfully.')
+
+        next = request.args.get('next')
+        # is_safe_url should check if the url is safe for redirects.
+        # See http://flask.pocoo.org/snippets/62/ for an example.
+        #if not is_safe_url(next):
+        #    return flask.abort(400)
+
+        return redirect(next or flask.url_for('index'))
+    return render_template('login.html', form=form)
 
 # create the model views for our classes
 admin.add_view(ModelView(Dealer, db.session, endpoint="dealer"))
