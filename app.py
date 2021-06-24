@@ -42,6 +42,41 @@ class Dealer(db.Model):
             return "{}".format(str(self.dealer_email))
         return False
 
+    def get_dealer_address(self):
+        if self.dealer_address1 and self.dealer_address2 and self.dealer_city and self.dealer_state and self.dealer_zip_code:
+            return "{} {} {} {} {}".format(self.dealer_address1, self.dealer_address2, self.dealer_city, self.dealer_state, self.dealer_zip_code)
+
+class Receiver(db.Model):
+    __tablename__ = "receiver"
+    id = db.Column(db.Integer, primary_key=True)
+    receiver_type_id = db.Column(db.Integer, db.ForeignKey("receivertype.id"), nullable=False)
+    receiver = relationship("ReceiverType")
+    receiver_name = db.Column(db.String(255), nullable=False, unique=True)
+    receiver_fqdn = db.Column(db.String(255), nullable=False)
+    receiver_ip = db.Column(db.String(255), nullable=False)
+    receiver_status = db.Column(db.String(255), nullable=False)
+    receiver_port = db.Column(db.Integer, nullable=False)
+    
+    def __repr__(self):
+        if self.id and self.receiver_name and self.receiver_status:
+            return "name: {} status: {}".format(self.receiver_name, self.receiver_status)
+        return "no name/status, ID: {}".format(str(self.id))
+
+    def get_receiver_netaddr(self):
+        if self.receiver_ip and self.receiver_port:
+            return "{}:{}".format(self.receiver_ip,self.receiver_port)
+
+
+class ReceiverType(db.Model):
+    __tablename__ = "receivertype"
+    id = db.Column(db.Integer, primary_key=True)
+    receiver_type_name = db.Column(db.String(255), nullable=False)
+    receiver_version = db.Column(db.String(255), nullable=False)
+    
+    def __repr__(self):
+        if self.id and self.receiver_type_name and self.receiver_version:
+            return "name: {} version: {}".format(self.receiver_type_name, self.receiver_version)
+        return "no name/version, ID: {}".format(str(self.id))
 
 class DealerSettings(db.Model):
     __tablename__ = "dealersettings"
@@ -70,6 +105,11 @@ class Customer(db.Model):
     def __repr__(self):
         if self.id and self.customer_name:
             return "{}".format(self.customer_name)
+
+    def is_active(self):
+        if self.is_active:
+            return True
+        return False
 
 class Location(db.Model):
     __tablename__ = "location"
@@ -131,6 +171,10 @@ class SensorType(db.Model):
             return "{}".format(self.sensor_type_name)
         return "{}".format(str(self.id))
 
+    def get_sensor_type_code(self):
+        if self.sensor_type_code:
+            return "{}".format(self.sensor_type_code)
+
 
 class Radio(db.Model):
     __tablename__ = "radio"
@@ -157,6 +201,10 @@ class Radio(db.Model):
         if self.radio_params:
             return "{}".format(str(self.radio_params))
         return "{}".format(str(self.id))
+
+    def get_radio_receiver_netaddr(self):
+        if self.radio_receiver_ip and self.radio_receiver_port:
+            return "{}:{}".format(self.radio_receiver_ip,self.radio_receiver_port)
 
 
 class RadioSensor(db.Model):
@@ -279,3 +327,5 @@ if __name__ == "__main__":
         port=config.PORT,
         debug=config.DEBUG
     )
+
+    #need users, roles(admin users, customers, etc)
