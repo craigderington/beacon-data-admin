@@ -272,7 +272,7 @@ class RadioSensorData(db.Model):
         if self.id and self.radio and self.sensor_observation_data:
             return "Radio: {} Sensor ID: {} Sensor Data: {}".format(
                 self.radio, 
-                str(sensor_id),
+                str(self.sensor_id),
                 self.sensor_observation_data
             )
         return "{}".format(str(self.id))

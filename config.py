@@ -10,3 +10,5 @@ PORT = 8580
 # SQLite3
 SQLALCHEMY_DATABASE_URI = "sqlite:///radiobeaconv3.db"
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+FLASK_ADMIN_SWATCH = "flatly"
