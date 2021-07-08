@@ -93,6 +93,8 @@ class Dealer(db.Model):
         if self.dealer_address1 and self.dealer_address2 and self.dealer_city and self.dealer_state and self.dealer_zip_code:
             return "{} {} {} {} {}".format(self.dealer_address1, self.dealer_address2, self.dealer_city, self.dealer_state, self.dealer_zip_code)
 
+    
+
 class Receiver(db.Model):
     __tablename__ = "receiver"
     id = db.Column(db.Integer, primary_key=True)

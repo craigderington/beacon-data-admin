@@ -11,12 +11,10 @@ home_bp = Blueprint(
 )
 
 
-@home_bp.route('/search', methods=['GET'])
+@home_bp.route('/home', methods=['GET'])
 def home():
     """Homepage."""
-    form1 = SearchForm(request.form)
 
     return render_template(
-        "search.html",
-        form=form1
+        "home.html"
     )

@@ -21,7 +21,7 @@
     $(document).ready(function() {
         var names = [];
         function loadNames() {
-            $.getJSON('/search', function(data, status, xhr) {
+            $.getJSON('/searchgo', function(data, status, xhr) {
                 for (var i = 0; i < data.length; i++) {
                     names.push(data[i].name);
                 }

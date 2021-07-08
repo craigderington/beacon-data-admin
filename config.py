@@ -1,7 +1,9 @@
 import os
+import click
+from flask import Flask
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-
+app = Flask(__name__)
 
 class Config(object):
 
@@ -36,6 +38,7 @@ class DevelopmentConfig(Config):
     pass
 
 class ProductionConfig(Config):
+    DEBUG = False
     pass
 
 config = {

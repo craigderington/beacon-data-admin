@@ -19,11 +19,10 @@ main_bp = Blueprint(
 @login_required
 def dashboard():
     """Logged-in User Dashboard, goes to search function for now"""
-    form1 = SearchForm(request.form)
 
     return render_template(
-        "search.html",
-            form=form1
+        "home.html",
+
     )
 
 @main_bp.route("/logout")
@@ -33,12 +32,13 @@ def logout():
     logout_user()
     return redirect(url_for('auth_bp.login'))
 
+"""
 @main_bp.route("/search", methods=["GET", "POST"])
 def get_search_results():
     resp = models.Dealer.query.all()
     dealers = [d.as_dict() for d in resp]
     return json.jsonify(dealers)
-           
+"""           
 
 """
         @app.route("/", methods=["GET", "POST"])
